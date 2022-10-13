@@ -42,8 +42,22 @@ $$
 
 방법론을 제안한 연구자들에 의하면 t-SNE의 성능은 perplexity 값의 변화(5~50)에 강건하다고 한다. 그렇다면 perplexity값이 실제 t-SNE를 이용한 차원축소 과정에서 저자들의 주장대로 그 값이 강건한지, 그리고 Perplexity 값이 실제 모델에 어떻게 영향을 주는지 이번 튜토리얼을 통해 파악하고자 한다.
 
+## 3. Code
+
+```
+from sklearn.manifold import TSNE
+import scipy as sp
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import MinMaxScaler
+import warnings
+
+warnings.filterwarnings(action='ignore')
+```
+
+## 4. Conclusion
 
 ## 5. Reference
 
 Van der Maaten, Laurens, and Geoffrey Hinton. "Visualizing data using t-SNE." Journal of machine learning research 9.11 (2008).[[Link]](https://www.jmlr.org/papers/volume9/vandermaaten08a/vandermaaten08a.pdf?fbcl)
-#Wattenberg, Martin, Fernanda Viégas, and Ian Johnson. "How to use t-SNE effectively." Distill 1.10 (2016): e2.[[Link]](https://distill.pub/2016/misread-tsne/?_ga=2.135835192.888864733.1531353600-1779571267.1531353600)
+Wattenberg, Martin, Fernanda Viégas, and Ian Johnson. "How to use t-SNE effectively." Distill 1.10 (2016): e2.[[Link]](https://distill.pub/2016/misread-tsne/?_ga=2.135835192.888864733.1531353600-1779571267.1531353600)
