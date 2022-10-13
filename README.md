@@ -43,19 +43,49 @@ $$
 방법론을 제안한 연구자들에 의하면 t-SNE의 성능은 perplexity 값의 변화(5~50)에 강건하다고 한다. 그렇다면 perplexity값이 실제 t-SNE를 이용한 차원축소 과정에서 저자들의 주장대로 그 값이 강건한지, 그리고 Perplexity 값이 실제 모델에 어떻게 영향을 주는지 이번 튜토리얼을 통해 파악하고자 한다.
 
 ## 3. Code
+Scikit-learn의 TSNE 모듈을 이용해 실습을 진행하고자 한다.  
+튜토리얼에 이용할 샘플을 만들고 시각화하면 다음과 같다.
+```python
+#Sample 생성
 
+a = 2
+rv1 = sp.stats.multivariate_normal([+a, +a], [[1, 0], [0, 1]])
+rv2 = sp.stats.multivariate_normal([+a, -a], [[1, 0], [0, 1]])
+rv3 = sp.stats.multivariate_normal([-a, +a], [[1, 0], [0, 1]])
+rv4 = sp.stats.multivariate_normal([-a, -a], [[1, 0], [0, 1]])
+#%%
+X0 = rv1.rvs(100)
+X1 = rv2.rvs(100)
+X2 = rv3.rvs(100)
+X3 = rv4.rvs(100)
+
+X = np.vstack([X0,X1,X2,X3])
+Y = np.hstack([np.zeros(100), np.ones(100),np.ones(100)*2,np.ones(100)*3])
 ```
-from sklearn.manifold import TSNE
-import scipy as sp
-import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.preprocessing import MinMaxScaler
-import warnings
 
-warnings.filterwarnings(action='ignore')
+
+![](https://github.com/cyp-ark/BA-Ch1-tutorial/blob/main/sample.png)
+
+
+```python
+#Perplexity 설정 및 t-SNE 연산
+
+n_perplexity = [1,2,3,5,10,15,20,25,30,35,40,45,50,60,70,80,90,100,125,150,175,200]
+color = ['red','green','blue','orange']
+
+X_t = np.zeros(shape=(len(n_perplexity),len(X),2))
+
+for i in range(len(n_perplexity)):
+    X_t[i] = TSNE(n_components=2,perplexity=n_perplexity[i],random_state=0).fit_transform(X)
 ```
 
-## 4. Conclusion
+
+
+
+## 4. Results
+Perplexity를 1부터 50까지 변화해가면서 t-SNE를 진행한 후 시각화를 진행한 결과 perplexity 값이 약 10 전후부터 안정적인 모양이 나오기 시작했으며, 그 후 크게 움직임이 없었다. 물론 데이터셋이 다를 경우 그 결과가 다를 수 있겠으나 그 데이터 셋의 크기가 충분히 클 경우 일정 값 이상부터는 robust한것으로 보여진다. 다만 TSNE 모듈에서 기본적으로 perplexity=30으로 설정되어있는데, 상대적으로 크기가 작은 데이터셋의 경우 이 값을 조절할 필요가 있어보인다.
+
+![](https://github.com/cyp-ark/BA-Ch1-tutorial/blob/main/perplexity.gif)
 
 ## 5. Reference
 
