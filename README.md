@@ -8,7 +8,8 @@ PCA와 t-SNE의 차이에 대해 이해하고 데이터 셋마다 맞는 방법�
 
 ## 2. PCA(Principal Components Analysis)
 
-$$p_{ij}=e^{}a$$
-
+$$
+p_{ij} = {e^{-||x_{i}-x_{j}||^{2} \over 2\sigma_{i}^{2}} \over \sum_{k\neq i} e^{ -||x_{i}-x_{k}||^{2} \over 2\sigma_{i}^{2} }}
+$$
 
 ## 3. t-SNE(t-distributed Stochastic Neighbor Embedding)
