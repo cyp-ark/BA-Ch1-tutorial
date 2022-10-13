@@ -1,15 +1,26 @@
 # BA-Ch1-tutorial
 
 ## 0. Introduction
-본 튜토리얼은 2022년 2학기 고려대학교 산업경영공학과 비즈니스 어낼리틱스 수업의 
+데이터 분석을 하다보면 하나의 샘플에 대해 여러 변수들이 측정되는 것을 볼 수 있다. 적게는 변수 하나가 될 수도 있으나 많은 경우 수천개 이상의 변수들로 하나의 샘플이 표현 되기도 한다. 하지만 우리가 인지할 수 있는 차원은 3차원 정도이고, 한눈에 데이터의 분포등을 잘 이해할 수 있는 차원은 2차원 평면 정도이기 때문에 만약 우리가 4개 이상의 변수들로 이루어진 샘플들을 시각화 하려 한다면 그 데이터들 자체로써는 표현하기가 불가능 할 것이다. 그렇기 때문에 우리는 고차원의 데이터를 우리가 인지할 수 있는 저차원의 평면으로 변형시켜야 각 샘플 별 특징이나 샘플 간 거리, 유사도 등을 한눈에 파악 할 수 있다.\\
+고차원의 데이터를 저차원으로 변형 시키는 것을 차원 축소(dimensionality reduction)이라 한다.
 
 ## 1. Purpose
 PCA와 t-SNE의 차이에 대해 이해하고 데이터 셋마다 맞는 방법론을 찾는다.
 
-## 2. PCA(Principal Components Analysis)
+## 2. t-SNE(t-distributed Stochastic Neighbor Embedding)
 
 $$
-p_{ij} = {e^{-||x_{i}-x_{j}||^{2} \over 2\sigma_{i}^{2}} \over \sum_{k\neq i} e^{ -||x_{i}-x_{k}||^{2} \over 2\sigma_{i}^{2} }}
+p_{ij} = { e^{-  {||x_{i}-x_{j}||^{2} \over 2\sigma_{i}^{2}}} \over \sum_{k\neq i} e^{ -{||x_{i}-x_{k}||^{2} \over 2\sigma_{i}^{2}} }}
 $$
 
-## 3. t-SNE(t-distributed Stochastic Neighbor Embedding)
+$$
+q_{ij} = { e^{-||x_{i}-x_{j}||^{2}} \over \sum_{k\neq i} e^{ -||x_{i}-x_{k}||^{2} }}
+$$
+
+$$
+Perplexity(P_{i}) = 2^{H(P_{i})}
+$$
+
+$$
+H(P_{i}) = \sum_{j} p_{j|i}log_{2}p_{j|i}
+$$
