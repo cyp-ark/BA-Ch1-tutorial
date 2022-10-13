@@ -1,21 +1,36 @@
 # BA-Ch1-tutorial
 
 ## 0. Introduction
-데이터 분석을 하다보면 하나의 샘플에 대해 여러 변수들이 측정되는 것을 볼 수 있다. 적게는 변수 하나가 될 수도 있으나 많은 경우 수천개 이상의 변수들로 하나의 샘플이 표현 되기도 한다. 하지만 우리가 인지할 수 있는 차원은 3차원 정도이고, 한눈에 데이터의 분포등을 잘 이해할 수 있는 차원은 2차원 평면 정도이기 때문에 만약 우리가 4개 이상의 변수들로 이루어진 샘플들을 시각화 하려 한다면 그 데이터들 자체로써는 표현하기가 불가능 할 것이다. 그렇기 때문에 우리는 고차원의 데이터를 우리가 인지할 수 있는 저차원의 평면으로 변형시켜야 각 샘플 별 특징이나 샘플 간 거리, 유사도 등을 한눈에 파악 할 수 있다.\\
-고차원의 데이터를 저차원으로 변형 시키는 것을 차원 축소(dimensionality reduction)이라 한다.
+데이터 분석을 하다보면 하나의 샘플에 대해 여러 변수들이 측정되는 것을 볼 수 있다. 적게는 변수 하나가 될 수도 있으나 많은 경우 수천개 이상의 변수들로 하나의 샘플이 표현 되기도 한다. 하지만 우리가 인지할 수 있는 차원은 3차원 정도이고, 한눈에 데이터의 분포등을 잘 이해할 수 있는 차원은 2차원 평면 정도이기 때문에 만약 우리가 4개 이상의 변수들로 이루어진 샘플들을 시각화 하려 한다면 그 데이터들 자체로써는 표현하기가 불가능 할 것이다. 그렇기 때문에 우리는 고차원의 데이터를 우리가 인지할 수 있는 저차원의 평면으로 변형시켜야 각 샘플 별 특징이나 샘플 간 거리, 유사도 등을 한눈에 파악 할 수 있다.
+<br/><br/>
+고차원의 데이터를 저차원으로 변형 시키는 것을 차원 축소(dimensionality reduction)이라 한다. 그러나 고차원의 데이터를 저차원으로 차원축소하는 과정에서는 필연적으로 고차원의 데이터가 가지고 있는 정보에 대한 손실이 발생하게 된다. 그렇기 때문에 모든 차원 축소 방법론들은 차원 축소 과정에서 손실되는 정보를 최소화하는 방식으로 진행되고, 그 과정에서 기존 데이터들의 거리 또는 유사성을 최대한 보존하는 것을 목표로 한다.
+<br/><br/>
+일반적으로 데이터 시각화에 많이 사용되는 차원축소 방법론에는 주성분 분석(PCA, Principal Components Analysis)와 t-SNE(t-distributed Stochastic Neighbor Embedding)이 있고, 최근에는 UMAP(Uniform Manifold Approximation and Projection)이라는 기법이 떠오르고 있다. 그 중 우리는 이번 튜토리얼에서 확률론적 방법을 이용하면서 주변 데이터들의 거리를 보존하는 방법인 t-SNE에 대해 알아보고자 한다.
 
-## 1. Purpose
-PCA와 t-SNE의 차이에 대해 이해하고 데이터 셋마다 맞는 방법론을 찾는다.
-
-## 2. t-SNE(t-distributed Stochastic Neighbor Embedding)
-
-$$
-p_{ij} = { e^{-  {||x_{i}-x_{j}||^{2} \over 2\sigma_{i}^{2}}} \over \sum_{k\neq i} e^{ -{||x_{i}-x_{k}||^{2} \over 2\sigma_{i}^{2}} }}
-$$
+## 1. t-SNE(t-distributed Stochastic Neighbor Embedding)
+t-SNE는 2008년 JMLR(Jounal of machine learing research)에 소개 된 방법론으로 기존의 방법론인 LLE(Locally Linear Embedding)에서의 선형적인 변환을 확률론적으로 발전시킨 방법이다. LLE는 어떠한 점을 고차원에서 저차원으로 변형할 때 그 점 주변의 이웃들의 선형결합으로 자신을 표현하고, 이후 저차원에서 그 선형결합의 조합을 이용해 점들을 다시 복원시키는 방법이다. t-SNE는 이웃들을 선형결합이 아닌 자신 주변에 분포해 있을 확률로 표현을 하고 그 확률을 보존하는 방식으로 저차원에서 데이터를 복원 시킨다. 이를 수식으로 나타내면 다음과 같다.
 
 $$
-q_{ij} = { e^{-||x_{i}-x_{j}||^{2}} \over \sum_{k\neq i} e^{ -||x_{i}-x_{k}||^{2} }}
+p_{j|i} = { e^{-  {||x_{i}-x_{j}||^{2} \over 2\sigma_{i}^{2}}} \over \sum_{k\neq i} e^{ -{||x_{i}-x_{k}||^{2} \over 2\sigma_{i}^{2}} }}
 $$
+
+$$
+q_{j|i} = { e^{-||x_{i}-x_{j}||^{2}} \over \sum_{k\neq i} e^{ -||x_{i}-x_{k}||^{2} }}
+$$
+
+$p_{j|i}$는 고차원에서 점 $i$에 대한 점$j$의 확률을 나타내고, $q_{j|i}$는 저차원에서 점 $i$에 대한 점 $j$의 확률을 나타낸다. 앞서 언급한대로 고차원의 데이터를 저차원의 데이터로 차원축소하는 과정에서 정보의 손실은 필연적인데, 이를 KL divergence(Kullback-Leibler divergence)라는 함수를 이용해 표현하고자 한다. KL divergence는 두 분포간의 정보의 차이를 계산한다. 우리는 이를 이용해 고차원에서의 분포와 저차원에서의 분포 간의 정보의 차이를 계산하고 이를 최소화 하는 방식으로 차원축소를 진행한다.
+
+$$
+D_{KL}(P|Q) = \sum_{i}\sum_{j}p_{j|i} log{p_{j|i} \over q_{j|i}}
+$$
+
+<br/>
+
+고차원 데이터의 분포에 대한 식을 다시한번 잘 살펴보면 $p_{j|i}$는 계산되는 값이고 $x_{i},x_{j}$는 데이터를 통해 주어진 값이다. 그렇다면 수식 중 $\sigma_{i}^{2}$만이 남게 되는데 이는 주어진 값인지, 계산되는 값인지, 아니면 사용자가 지정해줘야 되는 값인지 정확히 파악이 되지 않는다. 이는 사용자가 지정해줘야하는 hyperparameter로 이후 내용인 perplexity와 연관이 있다.
+
+## 2. Perplexity
+
+주변의 이웃값을 이용하는 모델들은 필연적으로 그 이웃의 범위를 설정해줄 필요가 있다. 예를들어 분류문제에서의 KNN(K-Nearest Neighborhood)나 군집분석에서의 K-means Clustring 등이 있다. 물론 이웃의 개수에 대한 정보를 전적으로 사용자에게 맡기는 것이 아닌 어느정도 범위의 값을 설정해두고 모델의 결과값을 비교해 그 중 가장 결과가 좋은 값을 선택하는 방식으로 설정해준다. t-SNE의 경우 perplexity라는 hyperparameter를 이용해 주변 이웃의 범위를 결정하게 되는데 이를 수식으로 나타내면 다음과 같다.
 
 $$
 Perplexity(P_{i}) = 2^{H(P_{i})}
@@ -24,3 +39,11 @@ $$
 $$
 H(P_{i}) = \sum_{j} p_{j|i}log_{2}p_{j|i}
 $$
+
+방법론을 제안한 연구자들에 의하면 t-SNE의 성능은 perplexity 값의 변화(5~50)에 강건하다고 한다. 그렇다면 perplexity값이 실제 t-SNE를 이용한 차원축소 과정에서 저자들의 주장대로 그 값이 강건한지, 그리고 Perplexity 값이 실제 모델에 어떻게 영향을 주는지 이번 튜토리얼을 통해 파악하고자 한다.
+
+
+## 5. Reference
+
+Van der Maaten, Laurens, and Geoffrey Hinton. "Visualizing data using t-SNE." Journal of machine learning research 9.11 (2008).[Link](https://www.jmlr.org/papers/volume9/vandermaaten08a/vandermaaten08a.pdf?fbcl)
+Wattenberg, Martin, Fernanda Viégas, and Ian Johnson. "How to use t-SNE effectively." Distill 1.10 (2016): e2.
